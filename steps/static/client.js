@@ -24,12 +24,12 @@ function initpixi(){
 
 initpixi();
 
-console.log(await fetch("/start"));
-
 var pos = 1
 var lightning = new Array(78).fill(-1)
 
-setTimeout(() => {
+setTimeout(async() => {
+  const r = await fetch("/start")
+  console.log(await r.text())
   setInterval(async() => {
     const raw = await fetch("/pos", {
       method: "POST",

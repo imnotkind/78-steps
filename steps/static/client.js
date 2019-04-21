@@ -17,11 +17,11 @@ function initpixi(){
   });
 
   //Add the canvas that Pixi automatically created for you to the HTML document
-  //document.body.appendChild(app.view);
+  document.body.appendChild(app.view);
 }
 
-$(window).on("load", function(){
 
+window.onload = function(){
   initpixi();
   var pos = 1
   var lightning = new Array(78).fill(-1)
@@ -42,7 +42,7 @@ $(window).on("load", function(){
       pos += 1
     }, 1000)
   }, 3000)
-});
+}
 
 
 

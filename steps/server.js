@@ -126,13 +126,13 @@ let start = async() => {
       for(let i = -2; i <= 2; i++){
         if(i != 0 && curr_pos+i >= 0 && curr_pos+i < 78 && bomb[curr_pos+i] == -1){
           if(Math.random() > 0.9){
-            bomb[curr_pos+i] = 5 //deploy bomb
+            //bomb[curr_pos+i] = 5 //deploy bomb
           }
         }
       }
 
       if(curr_pos == 77 - 2 && bomb[77] == -1){
-        bomb[77] = 5 //going to strike a 1 sec lightning in client hehe
+        //bomb[77] = 5 //going to strike a 1 sec lightning in client hehe
       }
 
       response.status = "ok"

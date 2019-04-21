@@ -17,29 +17,32 @@ function initpixi(){
   });
 
   //Add the canvas that Pixi automatically created for you to the HTML document
-  document.body.appendChild(app.view);
+  //document.body.appendChild(app.view);
 }
 
+$(window).on("load", function(){
+
+  initpixi();
+  var pos = 1
+  var lightning = new Array(78).fill(-1)
+
+  setTimeout(async() => {
+    const r = await fetch("/start")
+    console.log(await r.text())
+    setInterval(async() => {
+      const raw = await fetch("/pos", {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({pos: pos, lightning: lightning})
+      })
+      console.log(await raw.json())
+      pos += 1
+    }, 1000)
+  }, 3000)
+});
 
 
-initpixi();
 
-var pos = 1
-var lightning = new Array(78).fill(-1)
-
-setTimeout(async() => {
-  const r = await fetch("/start")
-  console.log(await r.text())
-  setInterval(async() => {
-    const raw = await fetch("/pos", {
-      method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({pos: pos, lightning: lightning})
-    })
-    console.log(await raw.json())
-    pos += 1
-  }, 1000)
-}, 3000)

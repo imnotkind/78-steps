@@ -52,7 +52,7 @@ let start = async() => {
     let prev_time = req.session.time
     let curr_time = moment().unix()
     let bomb = req.session.bomb;
-    let lightning = JSON.parse(req.body.lightning);
+    let lightning = req.body.lightning;
 
     
 

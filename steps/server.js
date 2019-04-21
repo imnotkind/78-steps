@@ -1,5 +1,6 @@
 const express  = require("express");
 const session = require('express-session');
+const bodyParser = require('body-parser')
 const fs = require("fs")
 const url = require("url");
 const nconf = require("nconf");
@@ -14,6 +15,8 @@ let start = async() => {
 
 
   let app = express();
+
+  app.use(bodyParser.json())
 
   app.use(session({
     secret: 'SUPER_DUPER_SECRET',
@@ -36,7 +39,7 @@ let start = async() => {
 
   app.post("/start", (req, res) => {
     req.session.pos = 0
-    req.session.time = moment().valueOf()
+    req.session.time = moment().unix() + 2
     req.session.bomb = new Array(78).fill(-1)
     req.session.start = true
     res.send("start")
@@ -45,11 +48,11 @@ let start = async() => {
   app.post("/pos", (req, res) => {
     
     let prev_pos = req.session.pos
-    let curr_pos = parseInt(req.query.pos)
+    let curr_pos = req.body.pos
     let prev_time = req.session.time
-    let curr_time = moment().valueOf()
+    let curr_time = moment().unix()
     let bomb = req.session.bomb;
-    let lightning = JSON.parse(req.query.lightning);
+    let lightning = JSON.parse(req.body.lightning);
 
     
 
@@ -74,7 +77,7 @@ let start = async() => {
       req.session.start = false
       return res.send(response)
     }
-    else if(curr_time - prev_time > 1000){
+    else if(curr_time - prev_time != 1){
       response.status = "error"
       response.info.message = "invalid timing"
       req.session.start = false
@@ -123,18 +126,17 @@ let start = async() => {
       for(let i = -2; i <= 2; i++){
         if(i != 0 && curr_pos+i >= 0 && curr_pos+i < 78 && bomb[curr_pos+i] == -1){
           if(Math.random() > 0.9){
-            bomb[curr_pos+i] = 4 //deploy bomb
+            bomb[curr_pos+i] = 5 //deploy bomb
           }
         }
       }
 
       if(curr_pos == 77 - 2 && bomb[77] == -1){
-        bomb[77] = 2
+        bomb[77] = 5 //going to strike a 1 sec lightning in client hehe
       }
 
       response.status = "ok"
       return res.send(response)
-
       
     }
     else{

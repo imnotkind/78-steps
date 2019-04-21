@@ -1,3 +1,5 @@
+var pos = 1
+var lightning = new Array(78).fill(-1)
 
 function initpixi(){
   let type = "WebGL"
@@ -20,15 +22,10 @@ function initpixi(){
   document.body.appendChild(app.view);
 }
 
-
-window.onload = function(){
-  initpixi();
-  var pos = 1
-  var lightning = new Array(78).fill(-1)
-
+let beattest = async() => {
+  const r = await fetch("/start")
+  console.log(await r.text())
   setTimeout(async() => {
-    const r = await fetch("/start")
-    console.log(await r.text())
     setInterval(async() => {
       const raw = await fetch("/pos", {
         method: "POST",
@@ -41,7 +38,13 @@ window.onload = function(){
       console.log(await raw.json())
       pos += 1
     }, 1000)
-  }, 3000)
+  }, 2000)
+}
+
+
+window.onload = function(){
+  initpixi();
+  beattest();
 }
 
 

@@ -39,7 +39,7 @@ let start = async() => {
 
   app.get("/start", (req, res) => {
     req.session.pos = 0
-    req.session.time = moment().unix() + 2
+    req.session.time = moment().valueOf() + 2000
     req.session.bomb = new Array(78).fill(-1)
     req.session.start = true
     res.send("start")
@@ -50,7 +50,7 @@ let start = async() => {
     let prev_pos = req.session.pos
     let curr_pos = req.body.pos
     let prev_time = req.session.time
-    let curr_time = moment().unix()
+    let curr_time = moment().valueOf()
     let bomb = req.session.bomb;
     let lightning = req.body.lightning;
 
@@ -77,7 +77,7 @@ let start = async() => {
       req.session.start = false
       return res.send(response)
     }
-    else if(curr_time - prev_time != 1){
+    else if(curr_time - prev_time < 700 || curr_time - prev_time > 1300){
       response.status = "error"
       response.info.message = "invalid timing"
       req.session.start = false

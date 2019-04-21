@@ -37,7 +37,7 @@ let start = async() => {
     res.send(output);
   })
 
-  app.post("/start", (req, res) => {
+  app.get("/start", (req, res) => {
     req.session.pos = 0
     req.session.time = moment().unix() + 2
     req.session.bomb = new Array(78).fill(-1)

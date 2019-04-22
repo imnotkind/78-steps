@@ -29,6 +29,7 @@ let start = async() => {
   }));
 
   app.use('/static', express.static('static'));
+  app.use('/vol', express.static('vol'));
   
   app.get("/", (req, res) => {
     let view = {}

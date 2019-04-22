@@ -5,8 +5,19 @@ let Application = PIXI.Application,
   Sprite = PIXI.Sprite,
   utils = PIXI.utils;
 
-var pos = 1
-var lightning = new Array(78).fill(-1)
+//Create a Pixi Application
+let app = new Application({
+  width: 1024, 
+  height: 1024,
+  antialias: true,    // default: false
+  transparent: false, // default: false
+  resolution: 1       // default: 1
+});
+
+
+
+let pos = 1
+let lightning = new Array(78).fill(-1)
   
 
 
@@ -19,24 +30,13 @@ function initpixi(){
   PIXI.utils.sayHello(type)
 
 
-  //Create a Pixi Application
-  let app = new Application({
-    width: 1024, 
-    height: 1024,
-    antialias: true,    // default: false
-    transparent: false, // default: false
-    resolution: 1       // default: 1
-  });
-
   //Add the canvas that Pixi automatically created for you to the HTML document
   document.body.appendChild(app.view);
 
   //load an image and run the `setup` function when it's done
   loader
   .add("baba","/static/sprite/baba.jpg")
-  .load(() => {
-    
-  });
+  .load(setup);
 }
 
 function setup(){

@@ -10,6 +10,7 @@ const MongoStore = require('connect-mongo')(session);
 
 const MongoUrl = 'mongodb://mongo:27017/mydb';
 
+const TOTAL_STEPS = 78;
 
 let start = async() => {
 
@@ -41,7 +42,7 @@ let start = async() => {
   app.get("/start", (req, res) => {
     req.session.pos = 0
     req.session.time = moment().valueOf() + 3000
-    req.session.friend = new Array(78).fill(-1)
+    req.session.friend = new Array(TOTAL_STEPS).fill(-1)
     req.session.start = true
     res.send("start")
   })
@@ -72,7 +73,7 @@ let start = async() => {
       response.info.message = "game not started"
       return res.send(response)
     }
-    else if(Math.abs(curr_pos - prev_pos) != 1 && !(curr_pos == 0 && prev_pos == 0)){
+    else if(Math.abs(curr_pos - prev_pos) != 1 && !(curr_pos == 0 && prev_pos == 0)){ //starting point
       response.status = "error"
       response.info.message = "invalid position"
       req.session.start = false
@@ -84,12 +85,11 @@ let start = async() => {
       req.session.start = false
       return res.send(response)
     }
-    else if (curr_pos < 78){
-      
+    else if (curr_pos < TOTAL_STEPS){
       req.session.pos = curr_pos;
       req.session.time = curr_time;
 
-      for(let i = 0; i < 78; i++){
+      for(let i = 0; i < TOTAL_STEPS; i++){
         if(lightning[i] == 0){
           if(i == curr_pos){
             response.status = "game over"
@@ -112,7 +112,7 @@ let start = async() => {
       }
       
 
-      for(let i = 0; i < 78; i++){
+      for(let i = 0; i < TOTAL_STEPS; i++){
         if(friend[i] != -1){
           friend[i] -= 1 //decay
 
@@ -126,15 +126,15 @@ let start = async() => {
       }
       
       for(let i = -2; i <= 2; i++){
-        if(i != 0 && curr_pos+i >= 0 && curr_pos+i < 78 && friend[curr_pos+i] == -1){
-          if(Math.random() > 0.9){
-            //friend[curr_pos+i] = 5 //deploy friend
+        if(i != 0 && curr_pos+i >= 0 && curr_pos+i < TOTAL_STEPS && friend[curr_pos+i] == -1){
+          if(Math.random() > 0.7){
+            friend[curr_pos+i] = 3 //deploy friend
           }
         }
       }
 
       if(curr_pos == 77 - 2 && friend[77] == -1){
-        //friend[77] = 5 //going to strike a 1 sec lightning in client hehe
+        friend[77] = 3 //going to strike a 1 sec lightning in client hehe
       }
 
       response.status = "ok"

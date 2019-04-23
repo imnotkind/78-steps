@@ -72,7 +72,7 @@ let start = async() => {
       response.info.message = "game not started"
       return res.send(response)
     }
-    else if(Math.abs(curr_pos - prev_pos) != 1){
+    else if(Math.abs(curr_pos - prev_pos) != 1 && !(curr_pos == 0 && prev_pos == 0)){
       response.status = "error"
       response.info.message = "invalid position"
       req.session.start = false
@@ -85,8 +85,6 @@ let start = async() => {
       return res.send(response)
     }
     else if (curr_pos < 78){
-      if(curr_pos < 0)
-        curr_pos = 0;
       
       req.session.pos = curr_pos;
       req.session.time = curr_time;

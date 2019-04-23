@@ -39,7 +39,6 @@ let app = new Application({
 });
 
 
-let ezmode = false;
 let sheet;
 let animations;
 let baba;
@@ -49,6 +48,7 @@ let banner;
 let bricks;
 let standby = false;
 let play = false;
+let ezmode = false;
 
 let pos = 0
 let lightning = new Array(TOTAL_STEPS).fill(-1)
@@ -65,6 +65,7 @@ clock.view.style.marginRight = "auto"
 document.body.appendChild(clock.view);
 
 let sound = document.getElementById("bgm")
+let count = document.getElementById("count")
 
 
 //load an image and run the `setup` function when it's done
@@ -383,6 +384,8 @@ let rendermap = (blockswitch, friend=null) => {
 
     //banner at top
     app.stage.addChild(banner)
+
+    count.innerText = String(pos)
 }
 
 

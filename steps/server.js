@@ -99,7 +99,7 @@ let start = async() => {
           }
           if(friend[i] != -1){
             response.status = "game over"
-            response.info.message = "lightning hit the friend"
+            response.info.message = "lightning hit your friend"
             req.session.start = false
             return res.send(response)
           }
@@ -108,7 +108,7 @@ let start = async() => {
       
 
       if(friend[curr_pos] != -1){
-        friend[curr_pos] = -1 //diffuse friend
+        friend[curr_pos] = -1 //rescue friend
       }
       
 
@@ -118,7 +118,7 @@ let start = async() => {
 
           if(friend[i] == 0){
             response.status = "game over"
-            response.info.message = "friend exploded"
+            response.info.message = "friend died"
             req.session.start = false
             return res.send(response)
           }
@@ -126,19 +126,25 @@ let start = async() => {
       }
       
       let friend_deployed = false
+      for(let i = 0; i < friend.length; i++){
+        if(friend[i] != -1)
+          friend_deployed = true
+      }
+      
       for(let i = -2; i <= 2; i++){
-        if(i != 0 && curr_pos+i >= 0 && curr_pos+i < TOTAL_STEPS && friend[curr_pos+i] == -1){
-          if(friend_deployed == false){
-            if(Math.random() > 0.7){
+        if(friend_deployed == false){
+          if(i != 0 && curr_pos+i >= 0 && curr_pos+i < TOTAL_STEPS - 1 && friend[curr_pos+i] == -1){ //last step is destined to spawn
+            if(Math.random() > 0.9){
               friend[curr_pos+i] = 3 //deploy friend
               friend_deployed = true
             }
           }
         }
       }
+      
 
-      if(curr_pos == 77 - 2 && friend[77] == -1){
-        friend[77] = 3 //going to strike a 1 sec lightning in client hehe
+      if(curr_pos == TOTAL_STEPS - 3 && friend_deployed == false){
+        friend[TOTAL_STEPS - 1] = 3 //going to strike a 1 sec lightning in client hehe
       }
 
       response.status = "ok"

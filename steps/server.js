@@ -89,24 +89,6 @@ let start = async() => {
       req.session.pos = curr_pos;
       req.session.time = curr_time;
 
-      for(let i = 0; i < TOTAL_STEPS; i++){
-        if(lightning[i] == 0){
-          if(i == curr_pos){
-            response.status = "game over"
-            response.info.message = "you got hit by lightning"
-            req.session.start = false
-            return res.send(response)
-          }
-          if(friend[i] != -1){
-            response.status = "game over"
-            response.info.message = "lightning hit your friend"
-            req.session.start = false
-            return res.send(response)
-          }
-        }
-      }
-      
-
       if(friend[curr_pos] != -1){
         friend[curr_pos] = -1 //rescue friend
       }
@@ -124,6 +106,24 @@ let start = async() => {
           }
         }
       }
+
+      for(let i = 0; i < TOTAL_STEPS; i++){
+        if(lightning[i] == 0){
+          if(i == curr_pos){
+            response.status = "game over"
+            response.info.message = "you got hit by lightning"
+            req.session.start = false
+            return res.send(response)
+          }
+          if(friend[i] != -1){
+            response.status = "game over"
+            response.info.message = "lightning hit your friend"
+            req.session.start = false
+            return res.send(response)
+          }
+        }
+      }
+      
       
       let friend_deployed = false
       for(let i = 0; i < friend.length; i++){

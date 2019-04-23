@@ -6,5 +6,6 @@ server checks if valid pos, and if valid time
 
 thunders are client sided
 
-bombs are server sided (if player doesn't diffuse bomb in 4 turns, die)
+friends are server sided (if player doesn't rescue friend in 4 turns, die + if friend get struck by lightning, die)
 
+in the last step, lightning always strikes friend

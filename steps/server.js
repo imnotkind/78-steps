@@ -40,8 +40,8 @@ let start = async() => {
 
   app.get("/start", (req, res) => {
     req.session.pos = 0
-    req.session.time = moment().valueOf() + 2000
-    req.session.bomb = new Array(78).fill(-1)
+    req.session.time = moment().valueOf() + 3000
+    req.session.friend = new Array(78).fill(-1)
     req.session.start = true
     res.send("start")
   })
@@ -52,7 +52,7 @@ let start = async() => {
     let curr_pos = req.body.pos
     let prev_time = req.session.time
     let curr_time = moment().valueOf()
-    let bomb = req.session.bomb;
+    let friend = req.session.friend;
     let lightning = req.body.lightning;
 
     
@@ -60,7 +60,7 @@ let start = async() => {
     let response = {};
     response.info = {
       message: "",
-      bomb: bomb,
+      friend: friend,
       prev_pos: prev_pos,
       curr_pos: curr_pos,
       prev_time: prev_time,
@@ -96,9 +96,9 @@ let start = async() => {
             req.session.start = false
             return res.send(response)
           }
-          if(bomb[i] != -1){
+          if(friend[i] != -1){
             response.status = "game over"
-            response.info.message = "lightning hit the bomb"
+            response.info.message = "lightning hit the friend"
             req.session.start = false
             return res.send(response)
           }
@@ -106,18 +106,18 @@ let start = async() => {
       }
       
 
-      if(bomb[curr_pos] != -1){
-        bomb[curr_pos] = -1 //diffuse bomb
+      if(friend[curr_pos] != -1){
+        friend[curr_pos] = -1 //diffuse friend
       }
       
 
       for(let i = 0; i < 78; i++){
-        if(bomb[i] != -1){
-          bomb[i] -= 1 //decay
+        if(friend[i] != -1){
+          friend[i] -= 1 //decay
 
-          if(bomb[i] == 0){
+          if(friend[i] == 0){
             response.status = "game over"
-            response.info.message = "bomb exploded"
+            response.info.message = "friend exploded"
             req.session.start = false
             return res.send(response)
           }
@@ -125,15 +125,15 @@ let start = async() => {
       }
       
       for(let i = -2; i <= 2; i++){
-        if(i != 0 && curr_pos+i >= 0 && curr_pos+i < 78 && bomb[curr_pos+i] == -1){
+        if(i != 0 && curr_pos+i >= 0 && curr_pos+i < 78 && friend[curr_pos+i] == -1){
           if(Math.random() > 0.9){
-            //bomb[curr_pos+i] = 5 //deploy bomb
+            //friend[curr_pos+i] = 5 //deploy friend
           }
         }
       }
 
-      if(curr_pos == 77 - 2 && bomb[77] == -1){
-        //bomb[77] = 5 //going to strike a 1 sec lightning in client hehe
+      if(curr_pos == 77 - 2 && friend[77] == -1){
+        //friend[77] = 5 //going to strike a 1 sec lightning in client hehe
       }
 
       response.status = "ok"

@@ -118,7 +118,7 @@ let start = async() => {
 
           if(friend[i] == 0){
             response.status = "game over"
-            response.info.message = "friend died"
+            response.info.message = "your friend died"
             req.session.start = false
             return res.send(response)
           }
@@ -133,7 +133,7 @@ let start = async() => {
       
       for(let i = -2; i <= 2; i++){
         if(friend_deployed == false){
-          if(i != 0 && curr_pos+i >= 0 && curr_pos+i < TOTAL_STEPS - 1 && friend[curr_pos+i] == -1){ //last step is destined to spawn
+          if(i != 0 && curr_pos+i >= 0 && curr_pos+i < TOTAL_STEPS - 1 && friend[curr_pos+i] == -1 && lightning[curr_pos+i] != 0){
             if(Math.random() > 0.9){
               friend[curr_pos+i] = 3 //deploy friend
               friend_deployed = true
@@ -143,7 +143,7 @@ let start = async() => {
       }
       
 
-      if(curr_pos == TOTAL_STEPS - 3 && friend_deployed == false){
+      if(curr_pos == TOTAL_STEPS - 3){
         friend[TOTAL_STEPS - 1] = 3 //going to strike a 1 sec lightning in client hehe
       }
 

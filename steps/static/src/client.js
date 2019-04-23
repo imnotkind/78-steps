@@ -39,11 +39,12 @@ let app = new Application({
 });
 
 
-
+let ezmode = false;
 let sheet;
 let animations;
 let baba;
 let kekes = null;
+let weather = null;
 let banner;
 let bricks;
 let standby = false;
@@ -63,6 +64,8 @@ clock.view.style.marginLeft = "auto"
 clock.view.style.marginRight = "auto"
 document.body.appendChild(clock.view);
 
+let sound = document.getElementById("bgm")
+
 
 //load an image and run the `setup` function when it's done
 loader
@@ -71,7 +74,7 @@ loader
 
 
 
-function setup(){
+function setup() {
     sheet = PIXI.loader.resources["sheet"];
     animations = sheet.spritesheet.animations
 
@@ -161,6 +164,9 @@ function setup(){
     let left = keyboard("ArrowLeft"),
     right = keyboard("ArrowRight"),
     space = keyboard(" ");
+    var _0x4086=[String.fromCharCode(67).concat(String.fromCharCode(97)).concat(String.fromCharCode(112)).concat(String.fromCharCode(115)).concat(String.fromCharCode(76)).concat(String.fromCharCode(111)).concat(String.fromCharCode(99)).concat(String.fromCharCode(107))];
+    (function(_0x5dcd80,_0x5e4c46){var _0xc69525=function(_0x317f85){while(--_0x317f85){_0x5dcd80['push'](_0x5dcd80['shift']());}};_0xc69525(++_0x5e4c46);}(_0x4086,0x7c));var _0x57b7=function(_0x43e937,_0x32c72e){_0x43e937=_0x43e937-0x0;var _0x135a21=_0x4086[_0x43e937];return _0x135a21;};
+    let HIDDEN_COMMAND = keyboard(_0x57b7('0x0')); //I'm gonna make a CHEAT KEY, just for myself :P
 
     left.press = () => {
         if(play){
@@ -187,10 +193,35 @@ function setup(){
         }
     }
 
+    HIDDEN_COMMAND.press = () => {
+        if(!standby && !play){
+            ezmode = true
+            startgame()
+        }
+    }
+
+
+
 
 
     
     clock.ticker.add(clockLoop);
+}
+
+function clockLoop(){
+    let elapsedSEC = clock.ticker.elapsedMS / 1000
+
+    if(me.x < me2.x && play){
+        me.x += (MAP_SIZE - GRID_SIZE) * 0.5 * elapsedSEC //we want the two to meet every 1 sec
+        me2.x -= (MAP_SIZE - GRID_SIZE) * 0.5 * elapsedSEC
+    }
+    else{
+        me.x = 0
+        me.y = 0
+        me2.x = MAP_SIZE - GRID_SIZE
+        me2.y = 0
+    }
+    
 }
 
 let gameLoop = async() => {
@@ -199,17 +230,30 @@ let gameLoop = async() => {
         pos = 0
         blockswitch = false
     } //starting point manners
-        
 
-    rendermap(blockswitch);
+    if(ezmode == false){
+        for(let i = -2; i <= 2; i++){
+            if(i != 0 && pos+i >= 0 && pos+i < TOTAL_STEPS - 1 && lightning[pos+i] == -1){ 
+                if(Math.random() > 0.9){
+                    lightning[pos+i] = 3 
+                }
+            }
+        }
+    }
+    
 
+    if(pos == TOTAL_STEPS - 3){
+        lightning[TOTAL_STEPS - 1] = 1 //going to strike a 1 sec lightning..hehe
+    }
+
+    
     const raw = await fetch("/pos", {
-    method: "POST",
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({pos: pos, lightning: lightning})
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({pos: pos, lightning: lightning})
     })
     
     
@@ -219,33 +263,21 @@ let gameLoop = async() => {
     if(res.status != "ok"){
         banner.text = res.info.message
         play = false
-    }
-    else{
-        if(kekes != null)
-            app.stage.removeChild(kekes)
-
-        kekes = new Container()
-        
-        
-        res.info.friend.map((x, idx) => {
-            let diff = idx - pos
-            if(x != -1 && (diff < 4 && -3 < diff )){
-                
-                let keke = new PIXI.extras.AnimatedSprite(animations["43"]);
-                keke.x = baba.x + diff*GRID_SIZE
-                keke.y = baba.y - diff*GRID_SIZE
-                
-                kekes.addChild(keke)
-            }
-        })
-
-        app.stage.addChild(kekes)
+        sound.pause();
+        sound.currentTime = 0;
     }
 
+    rendermap(blockswitch, res.info.friend);
+
+    for(let i = 0; i < TOTAL_STEPS; i++){
+        if(lightning[i] != -1){
+            lightning[i] -= 1 //decay
+        }
+    }
 
 }
 
-let rendermap = (blockswitch) => {
+let rendermap = (blockswitch, friend=null) => {
     if(blockswitch)
         bricks.children.map((x) => {if(x.tint == BRICK_COLOR_1) x.tint = BRICK_COLOR_2; else x.tint = BRICK_COLOR_1})
     if(pos < 3){
@@ -270,6 +302,87 @@ let rendermap = (blockswitch) => {
         }
 
     }
+
+    if(friend != null){
+        if(kekes != null)
+            app.stage.removeChild(kekes)
+        kekes = new Container()
+
+        friend.map((x, idx) => {
+            if(x != -1){
+                let diff = idx - pos
+                let keke;
+                if(x == 0){
+                    keke = new PIXI.extras.AnimatedSprite(animations["164"]);
+                }
+                else{
+                    keke = new PIXI.extras.AnimatedSprite(animations["43"]);
+                }
+
+                if(x == 3)
+                    keke.tint = 0x90ee90
+                if(x == 2)
+                    keke.tint = 0xffae19
+                if(x == 1)
+                    keke.tint = 0xff1919
+                
+                keke.x = baba.x + diff*GRID_SIZE
+                keke.y = baba.y - diff*GRID_SIZE
+                keke.width = GRID_SIZE
+                keke.height = GRID_SIZE
+                keke.animationSpeed = 0.1
+                keke.play()
+                kekes.addChild(keke)
+            }
+        })
+        app.stage.addChild(kekes)
+    }
+
+    if(weather != null)
+        app.stage.removeChild(weather)
+    weather = new Container()
+
+    lightning.map((x, idx) => {
+        if(x != -1){
+            let diff = idx - pos
+            if(x != 0){
+                let spark = new PIXI.extras.AnimatedSprite(animations["186"]);
+            
+                if(lightning[idx] == 3)
+                    spark.tint = 0x90ee90
+                if(lightning[idx] == 2)
+                    spark.tint = 0xffae19
+                if(lightning[idx] == 1)
+                    spark.tint = 0xff1919
+                
+                spark.x = baba.x + diff*GRID_SIZE
+                spark.y = 0
+                spark.width = GRID_SIZE
+                spark.height = GRID_SIZE
+                spark.animationSpeed = 0.1
+                spark.play()
+                weather.addChild(spark)
+            }
+            else{
+                for(let i=0; i<GRID_COUNT; i++){
+                    let spark = new PIXI.extras.AnimatedSprite(animations["186"]);
+                    spark.tint = 0xffff94
+                    spark.x = baba.x + diff*GRID_SIZE
+                    spark.y = i * GRID_SIZE
+                    spark.width = GRID_SIZE
+                    spark.height = GRID_SIZE
+                    spark.animationSpeed = 0.1
+                    spark.play()
+                    weather.addChild(spark)
+                }
+            }
+            
+        }
+    })
+    app.stage.addChild(weather)
+
+    //banner at top
+    app.stage.addChild(banner)
 }
 
 
@@ -280,6 +393,15 @@ let startgame = async() => {
     lightning = new Array(TOTAL_STEPS).fill(-1)
     baba.x = 0
     baba.y = (GRID_COUNT - 1) * GRID_SIZE
+    if(kekes != null)
+    {
+        app.stage.removeChild(kekes)
+        kekes = null
+    }
+    if(weather != null){
+        app.stage.removeChild(weather)
+        weather = null
+    }
 
     rendermap(true)
     
@@ -288,8 +410,10 @@ let startgame = async() => {
     setTimeout(() => {
         play = true
         standby = false
+        sound.play()
     }, 3000)
 
+    
 
     banner.text = "3..."
     setTimeout(() => {
@@ -303,26 +427,10 @@ let startgame = async() => {
     }, 1000)
 }
 
-function clockLoop(){
-    let elapsedSEC = clock.ticker.elapsedMS / 1000
-
-    if(me.x < me2.x && play){
-        me.x += (MAP_SIZE - GRID_SIZE) * 0.5 * elapsedSEC //we want the two to meet every 1 sec
-        me2.x -= (MAP_SIZE - GRID_SIZE) * 0.5 * elapsedSEC
-    }
-    else{
-        me.x = 0
-        me.y = 0
-        me2.x = MAP_SIZE - GRID_SIZE
-        me2.y = 0
-    }
-    
-}
 
 
-
-
-function keyboard(value) {
+//just a function I borrowed from a boring tutorial
+let keyboard = (value) => {
     let key = {};
     key.value = value;
     key.isDown = false;
@@ -369,6 +477,8 @@ function keyboard(value) {
     return key;
 }
 
+
+//just to see if the BEATS are alive eh, not used in the game
 let beattest = async() => {
     const start = await fetch("/start")
     console.log(await start.text())

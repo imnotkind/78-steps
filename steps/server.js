@@ -125,10 +125,14 @@ let start = async() => {
         }
       }
       
+      let friend_deployed = false
       for(let i = -2; i <= 2; i++){
         if(i != 0 && curr_pos+i >= 0 && curr_pos+i < TOTAL_STEPS && friend[curr_pos+i] == -1){
-          if(Math.random() > 0.7){
-            friend[curr_pos+i] = 3 //deploy friend
+          if(friend_deployed == false){
+            if(Math.random() > 0.7){
+              friend[curr_pos+i] = 3 //deploy friend
+              friend_deployed = true
+            }
           }
         }
       }

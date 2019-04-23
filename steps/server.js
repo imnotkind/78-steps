@@ -34,7 +34,7 @@ let start = async() => {
   
   app.get("/", (req, res) => {
     let view = {}
-    let template = fs.readFileSync('./static/index.html', 'utf8');
+    let template = fs.readFileSync('./static/src/index.html', 'utf8');
     let output = mustache.to_html(template, view);
     res.send(output);
   })

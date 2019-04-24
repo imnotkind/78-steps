@@ -81,7 +81,7 @@ let start = async() => {
     }
     else if(curr_time - prev_time < 700 || curr_time - prev_time > 1300){
       response.status = "error"
-      response.info.message = "timing is everything"
+      response.info.message = "timing is everything son"
       req.session.start = false
       return res.send(response)
     }

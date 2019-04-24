@@ -36,6 +36,7 @@ let BGM_LIST = ["zone1_1.mp3",
     "freedomdive.mp3",
     "conan.mp3",
     "highscore.mp3",
+    "conan2.mp3"
 ]
 
 let clock = new Application({

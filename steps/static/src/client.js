@@ -27,7 +27,16 @@ let TEXT_STYLE = new TextStyle({
 });
 let BRICK_COLOR_1 = 0xdaf7f8
 let BRICK_COLOR_2 = 0xdebcb0
-let BGM_LIST = ["zone1_1.mp3", "keroro.mp3"]
+let BGM_LIST = ["zone1_1.mp3", 
+    "keroro.mp3", 
+    "moonangel.mp3", 
+    "demons.mp3", 
+    "cardcapter.mp3", 
+    "Warriors.mp3", 
+    "freedomdive.mp3",
+    "conan.mp3",
+    "highscore.mp3",
+]
 
 let clock = new Application({
     width: MAP_SIZE, 

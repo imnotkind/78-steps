@@ -394,9 +394,9 @@ let rendermap = (blockswitch, friend=null) => {
 
 let startgame = async() => {
     let rand = Math.floor(Math.random() * BGM_LIST.length)
-    sound.src = "/static/"+BGM_LIST[rand]
+    sound.src = "/static/bgm/"+BGM_LIST[rand]
     sound.load()
-    
+
     standby = true
     pos = 0
     lightning = new Array(TOTAL_STEPS).fill(-1)

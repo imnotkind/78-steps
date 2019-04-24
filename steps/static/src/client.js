@@ -27,6 +27,7 @@ let TEXT_STYLE = new TextStyle({
 });
 let BRICK_COLOR_1 = 0xdaf7f8
 let BRICK_COLOR_2 = 0xdebcb0
+let BGM_LIST = ["zone1_1.mp3", "keroro.mp3"]
 
 let clock = new Application({
     width: MAP_SIZE, 
@@ -76,6 +77,7 @@ loader
 
 
 function setup() {
+
     sheet = PIXI.loader.resources["sheet"];
     animations = sheet.spritesheet.animations
 
@@ -391,6 +393,10 @@ let rendermap = (blockswitch, friend=null) => {
 
 
 let startgame = async() => {
+    let rand = Math.floor(Math.random() * BGM_LIST.length)
+    sound.src = "/static/"+BGM_LIST[rand]
+    sound.load()
+    
     standby = true
     pos = 0
     lightning = new Array(TOTAL_STEPS).fill(-1)

@@ -81,7 +81,7 @@ let start = async() => {
     }
     else if(curr_time - prev_time < 700 || curr_time - prev_time > 1300){
       response.status = "error"
-      response.info.message = "invalid timing"
+      response.info.message = "timing is everything"
       req.session.start = false
       return res.send(response)
     }
@@ -100,7 +100,7 @@ let start = async() => {
 
           if(friend[i] == 0){
             response.status = "game over"
-            response.info.message = "your friend died"
+            response.info.message = "your friend died from loneliness"
             req.session.start = false
             return res.send(response)
           }
@@ -111,13 +111,13 @@ let start = async() => {
         if(lightning[i] == 0){
           if(i == curr_pos){
             response.status = "game over"
-            response.info.message = "you got hit by lightning"
+            response.info.message = "you've been struck by lightning"
             req.session.start = false
             return res.send(response)
           }
           if(friend[i] != -1){
             response.status = "game over"
-            response.info.message = "lightning hit your friend"
+            response.info.message = "your friend got electrocuted"
             req.session.start = false
             return res.send(response)
           }

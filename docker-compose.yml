@@ -1,5 +1,8 @@
 version: '3'
 
+networks:
+    back:
+
 services:
     steps:
         build: ./steps
@@ -8,7 +11,11 @@ services:
         restart: always
         depends_on:
             - mongo
+        networks:
+            - back
         #volumes:
         #    - ./vol:/app/vol
     mongo:
         image: mongo
+        networks:
+            - back

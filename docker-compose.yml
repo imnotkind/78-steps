@@ -17,5 +17,6 @@ services:
         #    - ./vol:/app/vol
     mongo:
         image: mongo
+        restart: always
         networks:
             - back

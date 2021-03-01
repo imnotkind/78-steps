@@ -8,7 +8,7 @@ const mustache = require("mustache");
 const moment = require("moment");
 const MongoStore = require('connect-mongo').default;
 
-const MongoUrl = 'mongodb://mongo:27017/mydb';
+const MongoUrl = 'mongodb://db:27017/mydb';
 
 const TOTAL_STEPS = 78;
 
@@ -157,7 +157,7 @@ let start = async() => {
   })
 
 
-	app.listen(3080,"0.0.0.0",() => console.log('listening'));
+	app.listen(80,"0.0.0.0",() => console.log('listening'));
 };
 
 

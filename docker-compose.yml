@@ -4,18 +4,16 @@ networks:
     back:
 
 services:
-    steps:
-        build: ./steps
+    app:
+        build: ./app
         ports:
-            - "3080:3080"
+            - "15014:80"
         restart: always
         depends_on:
-            - mongo
+            - db
         networks:
             - back
-        #volumes:
-        #    - ./vol:/app/vol
-    mongo:
+    db:
         image: mongo
         restart: always
         networks:

@@ -6,7 +6,7 @@ const url = require("url");
 const nconf = require("nconf");
 const mustache = require("mustache");
 const moment = require("moment");
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo').default;
 
 const MongoUrl = 'mongodb://mongo:27017/mydb';
 
@@ -23,10 +23,7 @@ let start = async() => {
     secret: 'SUPER_DUPER_SECRET',
     resave: false,
     saveUninitialized: true,
-    store: new MongoStore({
-      url: MongoUrl,
-      collection: "sessions"
-    })
+    store: MongoStore.create({ mongoUrl: MongoUrl})
   }));
 
   app.use('/static', express.static('static'));
@@ -35,7 +32,7 @@ let start = async() => {
   app.get("/", (req, res) => {
     let view = {}
     let template = fs.readFileSync('./static/src/index.html', 'utf8');
-    let output = mustache.to_html(template, view);
+    let output = mustache.render(template, view);
     res.send(output);
   })
 

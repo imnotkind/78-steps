@@ -1,8 +1,8 @@
-# 78-steps
+# BaBa is NecroDancer
 
 client renders dodging game sends HTTP req of position every 1 second
 
-server checks if valid pos, and if valid time
+server checks if valid pos, time
 
 thunders are client sided
 
